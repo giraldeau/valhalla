@@ -100,17 +100,19 @@ TEST(Standalone, TurnLanesSplitLane) {
 
   // A -> C - takes the leftmost left lane
   result = gurka::route(map, "A", "C", "auto");
-  validate_turn_lanes(result, {
-                                  {3, "[ left ACTIVE POSSIBLE | left;through POSSIBLE | through;right ]"},
-                                  {0, ""},
-                              });
+  validate_turn_lanes(result,
+                      {
+                          {3, "[ left ACTIVE POSSIBLE | left;through POSSIBLE | through;right ]"},
+                          {0, ""},
+                      });
 
   // A -> E - takes the leftmost through lane
   result = gurka::route(map, "A", "E", "auto");
-  validate_turn_lanes(result, {
-                                  {3, "[ left | left;through ACTIVE POSSIBLE | through;right POSSIBLE ]"},
-                                  {0, ""}, // TODO lanes are tossed when all are through
-                              });
+  validate_turn_lanes(result,
+                      {
+                          {3, "[ left | left;through ACTIVE POSSIBLE | through;right POSSIBLE ]"},
+                          {0, ""}, // TODO lanes are tossed when all are through
+                      });
 
   // A -> G - takes the rightmost through lane
   result = gurka::route(map, "A", "G", "auto");
@@ -248,53 +250,58 @@ TEST(Standalone, TurnLanesMultiLaneShort) {
   gurka::assert::raw::expect_maneuvers(result, {DirectionsLeg_Maneuver_Type_kStart,
                                                 DirectionsLeg_Maneuver_Type_kLeft,
                                                 DirectionsLeg_Maneuver_Type_kDestination});
-  validate_turn_lanes(result, {
-                                  {5, "[ left ACTIVE POSSIBLE | left POSSIBLE | through | right | right ]"},
-                                  {5, "[ left ACTIVE POSSIBLE | left POSSIBLE | through | right | right ]"},
-                                  {0, ""},
-                              });
+  validate_turn_lanes(result,
+                      {
+                          {5, "[ left ACTIVE POSSIBLE | left POSSIBLE | through | right | right ]"},
+                          {5, "[ left ACTIVE POSSIBLE | left POSSIBLE | through | right | right ]"},
+                          {0, ""},
+                      });
 
   // A -> 3 - takes rightmost right lane
   result = gurka::route(map, "A", "3", "auto");
   gurka::assert::raw::expect_maneuvers(result, {DirectionsLeg_Maneuver_Type_kStart,
                                                 DirectionsLeg_Maneuver_Type_kRight,
                                                 DirectionsLeg_Maneuver_Type_kDestinationRight});
-  validate_turn_lanes(result, {
-                                  {5, "[ left | left | through | right POSSIBLE | right ACTIVE POSSIBLE ]"},
-                                  {5, "[ left | left | through | right POSSIBLE | right ACTIVE POSSIBLE ]"},
-                                  {0, ""},
-                              });
+  validate_turn_lanes(result,
+                      {
+                          {5, "[ left | left | through | right POSSIBLE | right ACTIVE POSSIBLE ]"},
+                          {5, "[ left | left | through | right POSSIBLE | right ACTIVE POSSIBLE ]"},
+                          {0, ""},
+                      });
 
   // A -> 4 - takes leftmost right lane
   result = gurka::route(map, "A", "4", "auto");
   gurka::assert::raw::expect_maneuvers(result, {DirectionsLeg_Maneuver_Type_kStart,
                                                 DirectionsLeg_Maneuver_Type_kRight,
                                                 DirectionsLeg_Maneuver_Type_kDestinationLeft});
-  validate_turn_lanes(result, {
-                                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
-                                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
-                                  {0, ""},
-                              });
+  validate_turn_lanes(result,
+                      {
+                          {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
+                          {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
+                          {0, ""},
+                      });
 
   // A -> F - takes leftmost right lane (left side driving)
   result = gurka::route(map, "A", "F", "auto");
   gurka::assert::raw::expect_maneuvers(result, {DirectionsLeg_Maneuver_Type_kStart,
                                                 DirectionsLeg_Maneuver_Type_kRight,
                                                 DirectionsLeg_Maneuver_Type_kDestination});
-  validate_turn_lanes(result, {
-                                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
-                                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
-                                  {0, ""},
-                              });
+  validate_turn_lanes(result,
+                      {
+                          {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
+                          {5, "[ left | left | through | right ACTIVE POSSIBLE | right POSSIBLE ]"},
+                          {0, ""},
+                      });
 
   // A -> G - takes both right lanes as destination is far away from previous transition
   result = gurka::route(map, "A", "G", "auto");
   gurka::assert::raw::expect_maneuvers(result, {DirectionsLeg_Maneuver_Type_kStart,
                                                 DirectionsLeg_Maneuver_Type_kRight,
                                                 DirectionsLeg_Maneuver_Type_kDestination});
-  validate_turn_lanes(result, {
-                                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right ACTIVE POSSIBLE ]"},
-                                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right ACTIVE POSSIBLE ]"},
-                                  {0, ""},
-                              });
+  validate_turn_lanes(
+      result, {
+                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right ACTIVE POSSIBLE ]"},
+                  {5, "[ left | left | through | right ACTIVE POSSIBLE | right ACTIVE POSSIBLE ]"},
+                  {0, ""},
+              });
 }
