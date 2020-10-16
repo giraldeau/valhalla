@@ -290,8 +290,7 @@ std::vector<PointLL> full_shape(const valhalla::DirectionsRoute& directions,
 }
 
 // Generate simplified shape of the route.
-std::vector<PointLL> simplified_shape(const valhalla::DirectionsRoute& directions,
-                                      const valhalla::Options& options) {
+std::vector<PointLL> simplified_shape(const valhalla::DirectionsRoute& directions) {
   Coordinate south_west(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
   Coordinate north_east(std::numeric_limits<int>::min(), std::numeric_limits<int>::min());
   std::vector<PointLL> simple_shape;
@@ -325,7 +324,7 @@ void route_geometry(json::MapPtr& route,
                     const valhalla::Options& options) {
   std::vector<PointLL> shape;
   if (options.has_generalize() && options.generalize() == 0.0f) {
-    shape = simplified_shape(directions, options);
+    shape = simplified_shape(directions);
   } else if (!options.has_generalize() || (options.has_generalize() && options.generalize() > 0.0f)) {
     shape = full_shape(directions, options);
   }
@@ -912,7 +911,6 @@ std::string turn_modifier(const uint32_t in_brg, const uint32_t out_brg) {
 // Get the turn modifier based on the maneuver type
 // or if needed, the incoming edge bearing and outgoing edge bearing.
 std::string turn_modifier(const valhalla::DirectionsLeg::Maneuver& maneuver,
-                          valhalla::odin::EnhancedTripLeg* etp,
                           const uint32_t in_brg,
                           const uint32_t out_brg,
                           const bool arrive_maneuver) {
@@ -1020,7 +1018,7 @@ json::MapPtr osrm_maneuver(const valhalla::DirectionsLeg::Maneuver& maneuver,
 
   std::string modifier;
   if (!depart_maneuver) {
-    modifier = turn_modifier(maneuver, etp, in_brg, out_brg, arrive_maneuver);
+    modifier = turn_modifier(maneuver, in_brg, out_brg, arrive_maneuver);
     if (!modifier.empty())
       osrm_man->emplace("modifier", modifier);
   }
