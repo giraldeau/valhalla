@@ -379,6 +379,30 @@ struct IntersectionEdges {
   }
 };
 
+std::string turn_lane_direction(uint16_t turn_lane) {
+  switch (turn_lane) {
+    case kTurnLaneReverse:
+      return "uturn";
+    case kTurnLaneSharpLeft:
+      return "sharp left";
+    case kTurnLaneLeft:
+      return "left";
+    case kTurnLaneSlightLeft:
+      return "slight left";
+    case kTurnLaneThrough:
+      return "straight";
+    case kTurnLaneSlightRight:
+      return "slight right";
+    case kTurnLaneRight:
+      return "right";
+    case kTurnLaneSharpRight:
+      return "sharp right";
+    default:
+      return "";
+  }
+  return "";
+}
+
 // Add intersections along a step/maneuver.
 json::ArrayPtr intersections(const valhalla::DirectionsLeg::Maneuver& maneuver,
                              valhalla::odin::EnhancedTripLeg* etp,
@@ -562,6 +586,9 @@ json::ArrayPtr intersections(const valhalla::DirectionsLeg::Maneuver& maneuver,
         auto lane = json::map({});
         // Process 'valid' flag
         lane->emplace("valid", turn_lane.is_active());
+        lane->emplace("valid_indication", turn_lane_direction(turn_lane.active_direction()));
+        // Should "possible" attribute be controlled via an option?
+        lane->emplace("possible", turn_lane.is_possible());
 
         // Process 'indications' array - add indications from left to right
         auto indications = json::array({});
